@@ -9,8 +9,14 @@ const confirmAnswerValidator = async (input) => {
 	return true;
 };
 const confirmTotalValidator = async (input) => {
-	if (input * 60 < 25) {
-		return 'Total must be greater than pomodoro';
+	if (input * 60 < 60) {
+		return 'Total must be greater than an hour';
+	}
+	return true;
+};
+const confirmPomodoroValidator = async (input) => {
+	if (input > 60) {
+		return 'Total must be smaller than an hour';
 	}
 	return true;
 };
@@ -32,6 +38,7 @@ inquirer
 			default: 25,
 			choices: [15, 30, 45],
 			validate: confirmAnswerValidator,
+			validate: confirmPomodoroValidator,
 		},
 		{
 			type: 'number',
