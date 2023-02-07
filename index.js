@@ -8,22 +8,22 @@ const confirmAnswerValidator = async (input) => {
 	}
 	return true;
 };
-const x = 25;
 const confirmTotalValidator = async (input) => {
-	if (input * 60 < x) {
-		return 'Totale must be bigger than the pomodoro';
+	if (input * 60 < 25) {
+		return 'Total must be greater than pomodoro';
 	}
+	return true;
 };
 inquirer
 	.prompt([
 		{
 			type: 'number',
 			name: 'totale',
-			message: 'Ore di lavoro totali?',
+			message: 'Ore di lavoro totali',
 			default: 8,
 			choices: [4, 8, 12],
 			validate: confirmAnswerValidator,
-			// validate: confirmTotalValidator,
+			validate: confirmTotalValidator,
 		},
 		{
 			type: 'number',
@@ -66,7 +66,6 @@ inquirer
 		const littleBreak = answers.pausaBreve;
 		const bigBreak = answers.pausaLunga;
 		const cycle = answers.cicli;
-
 		// create new container
 		const multibar = new cliProgress.MultiBar(
 			{
@@ -115,7 +114,6 @@ inquirer
 		const getBigCycle = async () => {
 			const value = totalMinutes / (tomato * cycle);
 			for (let j = 0; j < value; j++) {
-				console.log(j);
 				await getCycle();
 			}
 			multibar.stop();
