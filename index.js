@@ -2,21 +2,9 @@ import inquirer from 'inquirer';
 import cliProgress from 'cli-progress';
 import notifier from 'node-notifier';
 // import colors from 'ansi-colors';
-const confirmAnswerValidator = async (input) => {
+const confirmNegativeValidator = async (input) => {
 	if (input < 0) {
 		return 'Negative numbers are not valid';
-	}
-	return true;
-};
-const confirmTotalValidator = async (input) => {
-	if (input * 60 < 60) {
-		return 'Total must be greater than an hour';
-	}
-	return true;
-};
-const confirmPomodoroValidator = async (input) => {
-	if (input > 60) {
-		return 'Total must be smaller than an hour';
 	}
 	return true;
 };
@@ -28,8 +16,7 @@ inquirer
 			message: 'Ore di lavoro totali',
 			default: 8,
 			choices: [4, 8, 12],
-			validate: confirmAnswerValidator,
-			validate: confirmTotalValidator,
+			validate: confirmNegativeValidator,
 		},
 		{
 			type: 'number',
@@ -37,8 +24,7 @@ inquirer
 			message: 'Durata di un pomodoro (minuti di lavoro)',
 			default: 25,
 			choices: [15, 30, 45],
-			validate: confirmAnswerValidator,
-			validate: confirmPomodoroValidator,
+			validate: confirmNegativeValidator,
 		},
 		{
 			type: 'number',
@@ -46,7 +32,7 @@ inquirer
 			message: 'Durata di una pausa breve',
 			default: 5,
 			choices: [2, 5, 10],
-			validate: confirmAnswerValidator,
+			validate: confirmNegativeValidator,
 		},
 		{
 			type: 'number',
@@ -54,7 +40,7 @@ inquirer
 			message: 'Durata di una pausa lunga',
 			default: 15,
 			choices: [10, 15, 20],
-			validate: confirmAnswerValidator,
+			validate: confirmNegativeValidator,
 		},
 		{
 			type: 'number',
@@ -62,7 +48,7 @@ inquirer
 			message: 'Numero di cicli prima di una pausa lunga',
 			default: 4,
 			choices: [2, 4, 6, 8],
-			validate: confirmAnswerValidator,
+			validate: confirmNegativeValidator,
 		},
 	])
 	.then((answers) => {
@@ -73,6 +59,11 @@ inquirer
 		const littleBreak = answers.pausaBreve;
 		const bigBreak = answers.pausaLunga;
 		const cycle = answers.cicli;
+
+		if (totalMinutes < tomato) {
+			console.log('Totale deve essere minore di pomodoro');
+			return;
+		}
 		// create new container
 		const multibar = new cliProgress.MultiBar(
 			{
@@ -145,5 +136,6 @@ inquirer
 			console.log('Prompt couldnt be rendered in the current environment');
 		} else {
 			console.log('Something else went wrong');
+			console.log(error);
 		}
 	});
